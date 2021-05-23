@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "940767585946",
+    "project_id": "finalexamorderfood",
+    "storage_bucket": "finalexamorderfood.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940767585946:android:9a9dc73597028a4557e123",
+        "android_client_info": {
+          "package_name": "com.midterm.finalexamorderfood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940767585946-gi8rejpef1r2kmjephagjcphdvhckquh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.midterm.finalexamorderfood",
+            "certificate_hash": "4129fc5bd6e5dc6c59dcc5d27309df4bae20a55a"
+          }
+        },
+        {
+          "client_id": "940767585946-rm413vh8hdcce0tvikbkjcogspo4cd3a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4vJNUP5lc9gY0eh54wdiChOiVzFnOMtg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940767585946-rm413vh8hdcce0tvikbkjcogspo4cd3a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
