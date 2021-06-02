@@ -42,12 +42,20 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/cart_item_count"
-            android:layout_width="56dp"
-            android:layout_height="37dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="16dp" />
+
+        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:id="@+id/btn_quantity"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            app:backGroundColor="@color/btnSignUp"
+            app:finalNumber="20"
+            app:initialNumber="1"
+
+            app:textSize="2sp" />
+
+
 
     </LinearLayout>
 

@@ -53,6 +53,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     // Add librariy
 
+    implementation 'com.google.firebase:firebase-messaging:10.2.1'
+    implementation 'com.github.d-max:spots-dialog:0.7@aar'
+    implementation 'com.stepstone.apprating:app-rating:2.0.0'
+    implementation 'io.paperdb:paperdb:2.1'
+    implementation 'com.github.rey5137:material:1.2.4'
     implementation platform('com.google.firebase:firebase-bom:27.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.ornach.nobobutton:nobobutton:1.6'
@@ -70,6 +75,29 @@ dependencies {
 
     implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
+    implementation 'com.android.support:support-v4:+'
+    //Font
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+
+
+    // google service
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
+    implementation 'com.google.android.libraries.places:places:1.1.0'
+    // counterFAB
+
+
+    implementation 'com.github.andremion:counterfab:1.0.1'
+
+
+
+    // retrofit implementation
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

@@ -12,8 +12,8 @@ import com.midterm.finalexamorderfood.R;
 
 
 public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public TextView txtFoodName;
-    public ImageView foodView;
+    public TextView txtFoodName,food_price;
+    public ImageView foodView,fav_image,quick_cart;
 
     private ItemClickListener itemClickListener;
 
@@ -21,6 +21,10 @@ public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         super(itemView);
         txtFoodName = (TextView) itemView.findViewById(R.id.food_name);
         foodView = (ImageView) itemView.findViewById(R.id.food_image);
+        quick_cart = (ImageView) itemView.findViewById(R.id.btn_quick_cart);
+        fav_image = (ImageView) itemView.findViewById(R.id.fav);
+        food_price = (TextView) itemView.findViewById(R.id.food_price);
+
         itemView.setOnClickListener(this);
     }
 

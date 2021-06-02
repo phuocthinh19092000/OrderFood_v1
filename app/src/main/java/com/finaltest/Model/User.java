@@ -6,22 +6,20 @@ public class User {
     private String Phone;
 
 
-
     public User(String name, String password) {
         Name = name;
         Password = password;
-
     }
 
-    public User(){
-    }
-    public String getPhone() {
-        return Phone;
+    public User() {
     }
 
-    public void setPhone(String phone) {
+    public User(String name, String password, String phone) {
+        Name = name;
+        Password = password;
         Phone = phone;
     }
+
     public String getName() {
         return Name;
     }
@@ -38,5 +36,11 @@ public class User {
         Password = password;
     }
 
+    public String getPhone() {
+        return Phone;
+    }
 
+    public void setPhone(String phone) {
+        Phone = phone;
+    }
 }
