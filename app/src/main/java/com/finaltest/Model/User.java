@@ -4,6 +4,10 @@ public class User {
     private String Name;
     private String Password;
     private String Phone;
+    private String homeAddress;
+
+
+
 
 
     public User(String name, String password) {
@@ -28,6 +32,11 @@ public class User {
         Name = name;
     }
 
+    public String getHomeAddress() {
+        return homeAddress;
+    }
+
+
     public String getPassword() {
         return Password;
     }
@@ -42,5 +51,9 @@ public class User {
 
     public void setPhone(String phone) {
         Phone = phone;
+    }
+
+    public void setHomeAddress(String homeAddress) {
+        this.homeAddress = homeAddress;
     }
 }

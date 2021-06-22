@@ -76,6 +76,9 @@ public class Request {
         this.comment = comment;
     }
 
+
+    
+
     public String getLatLng() {
         return latLng;
     }

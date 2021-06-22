@@ -94,7 +94,7 @@ public class FoodList extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
                         holder.txtFoodName.setText(model.getName());
-                        holder.food_price.setText(String.format("$ %s",model.getPrice().toString()));
+                        holder.food_price.setText(String.format("$ %f",model.getPrice()));
                         Picasso.get().load(model.getImage()).into(holder.foodView);
 
                         // add Favorites
@@ -111,7 +111,8 @@ public class FoodList extends AppCompatActivity {
                                         model.getName(),
                                         "1",
                                         model.getPrice(),
-                                        model.getDiscount()
+                                        model.getDiscount(),
+                                        model.getImage()
                                 ));
                                 Toast.makeText(FoodList.this,"Added to Cart", Toast.LENGTH_SHORT).show();
                             }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.finaltest.Database.Database;
 import com.finaltest.Interface.ItemClickListener;
 import com.finaltest.Model.Categories;
 import com.finaltest.Model.Token;
+import com.finaltest.Remote.IGoogleService;
 import com.finaltest.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -47,11 +49,18 @@ import com.midterm.finalexamorderfood.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -67,6 +76,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     LinearLayoutManager layoutManager;
     FirebaseRecyclerAdapter adapter;
     CounterFab fab;
+
+    // google maps api
+    IGoogleService mGoogleMapService ;
 
 
     @Override
@@ -84,6 +96,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setContentView(v);*/
         super.onCreate(savedInstanceState);
 
+
+
+
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("src/main/assets/font/restaurant.otf")
                 .setFontAttrId(R.attr.fontPath)
@@ -91,7 +107,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         setContentView(R.layout.activity_home);
 
-
+        mGoogleMapService = Common.getGoogleMapsAPI();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -236,10 +252,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId() == R.id.refresh) {
-
-
+        if(item.getItemId() == R.id.menu_search){
+            startActivity(new Intent(Home.this,SearchActivity.class));
         }
+
+
         return super.onOptionsItemSelected(item);
     }
     @Override
@@ -355,98 +372,182 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             alertDialog.show();
 
         }
-
-
+        else if (id == R.id.nav_home_address){
+            showHomeAddressDialog();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
 
-
-
     }
-    private void showChangePasswordDialog() {
+
+    private void showHomeAddressDialog() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
-        alertDialog.setTitle("CHANGE PASSWORD");
+        alertDialog.setTitle("Change Home Address");
         alertDialog.setMessage("Please fill all information");
 
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View layout_pwd = inflater.inflate(R.layout.change_password_layout,null);
+        View layout_homeAddress = inflater.inflate(R.layout.home_address_layout, null);
 
-        MaterialEditText edtCurrPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtPassword);
-        MaterialEditText edtNewPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtNewPassword);
-        MaterialEditText edtConfirmPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtRepeatPassword);
+        final MaterialEditText edtHomeAddress = (MaterialEditText) layout_homeAddress.findViewById(R.id.edtHomeAddress);
 
-        alertDialog.setView(layout_pwd);
+        alertDialog.setView(layout_homeAddress);
+
+        if(!Common.currentUser.getHomeAddress().equalsIgnoreCase("")){
+            edtHomeAddress.setText(Common.currentUser.getHomeAddress());
+        }
+
 
         //Button
-        alertDialog.setPositiveButton("CHANGE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                //change password
+        alertDialog.setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
 
-                final android.app.AlertDialog waitDialog = new SpotsDialog(Home.this);
-                waitDialog.show();
-                System.out.println(edtCurrPassword.getText().toString());
-                System.out.println(Common.currentUser.getPassword());
-                // check old password
-                if(edtCurrPassword.getText().toString().equals(Common.currentUser.getPassword())){
-                    // check new password with confirm pass
-
-                    if(edtNewPassword.getText().toString().equals(edtConfirmPassword.getText().toString()))
-                    {
-                        Map<String,Object> passwordUpdate = new HashMap<String,Object>();
-                        passwordUpdate.put("password",edtNewPassword.getText().toString());
-
-                        //make Update
-
-                        DatabaseReference user = FirebaseDatabase.getInstance().getReference("User");
-                        user.child(Common.currentUser.getPhone())
-                                .updateChildren(passwordUpdate)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        waitDialog.dismiss();
-                                        System.out.println("Pass was update");
-                                        Toast.makeText(Home.this,"Pass was update",Toast.LENGTH_SHORT).show();
-
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        System.out.println("Wrong password");
-                                        System.out.println(e.getMessage());
-                                        Toast.makeText(Home.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-
-                    }
-                    else{
-                        waitDialog.dismiss();
-                        System.out.println("New Password Doesn't Match");
-                        Toast.makeText(Home.this,"New Password Doesn't Match",Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    waitDialog.dismiss();
-                    System.out.println("Wrong Old Password");
-                    Toast.makeText(Home.this,"Wrong Old Password",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+
+                // set new Home Address
+                Common.currentUser.setHomeAddress(edtHomeAddress.getText().toString());
+
+                FirebaseDatabase.getInstance().getReference("User")
+                        .child(Common.currentUser.getPhone())
+                        .setValue(Common.currentUser)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                String apiKey = "AIzaSyBa5ESLzC5ihGpAJfGh2X9aFI8dG4ZWIvc";
+
+                                    mGoogleMapService.getAddressName(
+                                            String.format("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s",
+                                                    edtHomeAddress.getText().toString(),
+                                                    apiKey))
+                                            .enqueue(new Callback<String>() {
+                                                @Override
+                                                public void onResponse(Call<String> call, Response<String> response) {
+                                                    //if fetch api is ok
+                                                    try {
+                                                        Log.i("responapi" ,"response : " + response.toString());
+                                                        JSONObject jsonObject = new JSONObject(response.body());
+
+                                                        JSONArray resultArray = jsonObject.getJSONArray("results");
+
+                                                        JSONObject firstObject = resultArray.getJSONObject(0);
+
+                                                        JSONObject geometry = firstObject.getJSONObject("geometry");
+                                                        JSONObject location = geometry.getJSONObject("location");
+
+                                                        Common.setLatitude(location.getString("lat"));
+                                                        Common.setLongitude(location.getString("lng"));
+                                                        Log.i("Home Address" ,"OnSelected HomeAddress : " + Common.getLatitude() + "\n" + Common.getLongitude());
+
+
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<String> call, Throwable t) {
+                                                    Toast.makeText(Home.this,"" + t.getMessage(),Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+
+                                Toast.makeText(Home.this,"Update Home Address Succesfully", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
             }
         });
         alertDialog.show();
+    }
 
-    };
+//    private void showChangePasswordDialog() {
+//
+//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
+//        alertDialog.setTitle("CHANGE PASSWORD");
+//        alertDialog.setMessage("Please fill all information");
+//
+//
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        View layout_pwd = inflater.inflate(R.layout.change_password_layout,null);
+//
+//        MaterialEditText edtCurrPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtPassword);
+//        MaterialEditText edtNewPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtNewPassword);
+//        MaterialEditText edtConfirmPassword = (MaterialEditText) layout_pwd.findViewById(R.id.edtRepeatPassword);
+//
+//        alertDialog.setView(layout_pwd);
+//
+//        //Button
+//        alertDialog.setPositiveButton("CHANGE", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int i) {
+//                //change password
+//
+//                final android.app.AlertDialog waitDialog = new SpotsDialog(Home.this);
+//                waitDialog.show();
+//                System.out.println(edtCurrPassword.getText().toString());
+//                System.out.println(Common.currentUser.getPassword());
+//                // check old password
+//                if(edtCurrPassword.getText().toString().equals(Common.currentUser.getPassword())){
+//                    // check new password with confirm pass
+//
+//                    if(edtNewPassword.getText().toString().equals(edtConfirmPassword.getText().toString()))
+//                    {
+//                        Map<String,Object> passwordUpdate = new HashMap<String,Object>();
+//                        passwordUpdate.put("password",edtNewPassword.getText().toString());
+//
+//                        //make Update
+//
+//                        DatabaseReference user = FirebaseDatabase.getInstance().getReference("User");
+//                        user.child(Common.currentUser.getPhone())
+//                                .updateChildren(passwordUpdate)
+//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        waitDialog.dismiss();
+//                                        System.out.println("Pass was update");
+//                                        Toast.makeText(Home.this,"Pass was update",Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        System.out.println("Wrong password");
+//                                        System.out.println(e.getMessage());
+//                                        Toast.makeText(Home.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+//                                    }
+//                                });
+//
+//                    }
+//                    else{
+//                        waitDialog.dismiss();
+//                        System.out.println("New Password Doesn't Match");
+//                        Toast.makeText(Home.this,"New Password Doesn't Match",Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//                else{
+//                    waitDialog.dismiss();
+//                    System.out.println("Wrong Old Password");
+//                    Toast.makeText(Home.this,"Wrong Old Password",Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//
+//        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//        alertDialog.show();
+//
+//    };
 
 
 

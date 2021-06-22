@@ -165,7 +165,7 @@
                  <TextView
                      android:id="@+id/food_description"
                      android:layout_width="match_parent"
-                     android:layout_height="67dp"
+                     android:layout_height="wrap_content"
                      android:layout_marginTop="12dp"
                      android:lineSpacingMultiplier="1.5"
                      android:padding="12dp"
@@ -174,6 +174,24 @@
                      android:textSize="18sp" />
              </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+
+            <com.ornach.nobobutton.NoboButton
+                android:id="@+id/btnShowComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:layout_weight="2"
+                app:nb_backgroundColor="@color/btnSignUp"
+                app:nb_enabled="true"
+                app:nb_focusColor="#809F5D"
+                app:nb_radius="10dp"
+                app:nb_text="Show Comment List"
+                app:nb_textColor="@android:color/primary_text_dark"
+                app:nb_gravity="top"
+                app:nb_textSize="31dp"
+                app:nb_textStyle="italic" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database extends  SQLiteAssetHelper {
-    private static final String DB_NAME = "OrderFood_DB.db";
+    private static final String DB_NAME = "OrderFood_DB_1.db";
     private static final int DB_VER = 3;
     private Context context;
     public Database(Context context) {
@@ -23,7 +23,7 @@ public class Database extends  SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelect = {"ID","ProductName", "ProductId", "Quantity", "Price", "Discount"};
+        String[] sqlSelect = {"ID","ProductName", "ProductId", "Quantity", "Price", "Discount","Image"};
         String sqlTable = "OrderDetail";
 
         qb.setTables(sqlTable);
@@ -38,7 +38,8 @@ public class Database extends  SQLiteAssetHelper {
                         c.getString(c.getColumnIndex("ProductName")),
                         c.getString(c.getColumnIndex("Quantity")),
                         c.getString(c.getColumnIndex("Price")),
-                        c.getString(c.getColumnIndex("Discount"))
+                        c.getString(c.getColumnIndex("Discount")),
+                        c.getString(c.getColumnIndex("Image"))
                            ));
             } while (c.moveToNext());
         }
@@ -72,12 +73,13 @@ public class Database extends  SQLiteAssetHelper {
      //   System.out.println("True123 :" + check);
         System.out.println("FoodId Add " + order.getProductId() + " abc" + order.getID());
 
-        String query = String.format("INSERT INTO OrderDetail(ProductId,ProductName,Quantity,Price,Discount) VALUES('%s','%s','%s','%s','%s');",
+        String query = String.format("INSERT INTO OrderDetail(ProductId,ProductName,Quantity,Price,Discount,Image) VALUES ('%s','%s','%s','%s','%s','%s')",
                 order.getProductId(),
                 order.getProductName(),
                 order.getQuantity(),
                 order.getPrice(),
-                order.getDiscount());
+                order.getDiscount(),
+                order.getImage());
         db.execSQL(query);
     }
 

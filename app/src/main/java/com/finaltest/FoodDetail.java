@@ -1,6 +1,7 @@
 package com.finaltest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,8 +19,11 @@ import com.finaltest.Database.Database;
 import com.finaltest.Model.Food;
 import com.finaltest.Model.Order;
 import com.finaltest.Model.Rating;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.internal.ViewUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import com.midterm.finalexamorderfood.R;
+import com.midterm.finalexamorderfood.databinding.ActivityShowCommentBinding;
+import com.ornach.nobobutton.NoboButton;
 import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
@@ -50,6 +56,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     CounterFab btnCart;
 
     RatingBar ratingBar;
+
+    NoboButton btnShowComment;
 
 
     String foodId = "";
@@ -84,7 +92,20 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         numberButton = (ElegantNumberButton)findViewById(R.id.number_button);
         btnCart = (CounterFab) findViewById(R.id.btnCart);
         btnRating = (FloatingActionButton)findViewById(R.id.btn_rating);
+        btnShowComment  = (NoboButton) findViewById(R.id.btnShowComment);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+
+        btnShowComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FoodDetail.this, showComment.class);
+                intent.putExtra(Common.INTENT_FOOD_ID,foodId);
+                startActivity(intent);
+
+
+            }
+        });
 
         btnRating.setOnClickListener(new View.OnClickListener(){
 
@@ -103,7 +124,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                         currentFood.getName(),
                         numberButton.getNumber(),
                         currentFood.getPrice(),
-                        currentFood.getDiscount()
+                        currentFood.getDiscount(),
+                        currentFood.getImage()
                 ));
                 Toast.makeText(FoodDetail.this,"Added to Cart", Toast.LENGTH_SHORT).show();
             }
@@ -217,6 +239,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
     @Override
     public void onPositiveButtonClicked(int value, String comment) {
+
+        /*
         // get rating and upload to firebase
         Rating rating = new Rating(
                 Common.currentUser.getPhone(),
@@ -246,6 +270,24 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
             }
         });
+
+        */
+        final Rating rating = new Rating(
+                Common.currentUser.getPhone(),
+                foodId,
+                String.valueOf(value),
+                comment);
+
+        // Fix user can rate multiphile times
+
+        ratingTbl.push().setValue(rating)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(FoodDetail.this,"Thank you for your rating submit", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
     @Override

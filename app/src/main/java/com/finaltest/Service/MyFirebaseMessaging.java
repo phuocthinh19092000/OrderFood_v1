@@ -8,22 +8,55 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 
+import com.finaltest.Common.Common;
+import com.finaltest.Helper.NotificationHelper;
 import com.finaltest.MainActivity;
+import com.finaltest.OrderStatus;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.midterm.finalexamorderfood.R;
+
+import java.util.Random;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        sendNotification(remoteMessage);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            sendNotificationAPI26(remoteMessage);
+        }
+        else {
+            sendNotification(remoteMessage);
+        }
+    }
+
+    private void sendNotificationAPI26(RemoteMessage remoteMessage) {
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
+
+        String title = notification.getTitle();
+        String content = notification.getBody();
+
+        Intent intent = new Intent(this, OrderStatus.class);
+        intent.putExtra(Common.PHONE_TEXT, Common.currentUser.getPhone());
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationHelper helper = new NotificationHelper(this);
+        Notification.Builder builder = helper.getChannelNotification(title,content,pendingIntent,defaultSoundUri);
+
+
+        //get random id to show all notification
+        helper.getManager().notify(new Random().nextInt(), builder.build());
 
     }
 
@@ -47,9 +80,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         noti.notify(0,builder.build());
-
-
-
 
 
     }

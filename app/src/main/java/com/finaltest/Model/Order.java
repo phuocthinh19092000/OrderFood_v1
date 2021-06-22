@@ -7,6 +7,7 @@ public class Order {
     private String Quantity;
     private String Price;
     private String Discount;
+    private String Image;
 
     public Order(String productId, String productName, String quantity, String price, String discount) {
         ProductId = productId;
@@ -17,13 +18,23 @@ public class Order {
     }
 
 
-    public Order(int ID, String productId, String productName, String quantity, String price, String discount) {
+    public Order(int ID, String productId, String productName, String quantity, String price, String discount, String image) {
         this.ID = ID;
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
         Price = price;
         Discount = discount;
+        Image = image;
+    }
+
+    public Order(String productId, String productName, String quantity, String price, String discount, String image) {
+        ProductId = productId;
+        ProductName = productName;
+        Quantity = quantity;
+        Price = price;
+        Discount = discount;
+        Image = image;
     }
 
     public int getID() {
@@ -75,5 +86,13 @@ public class Order {
 
     public void setDiscount(String discount) {
         Discount = discount;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        Image = image;
     }
 }
