@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple_500"
+    tools:context=".MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="122dp"
+                android:layout_height="112dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_baseline_room_service_24" />
+
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_baseline_wine_bar_24" />
+        </LinearLayout>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:hint="Phone"
+            android:inputType="phone"
+            android:textColorHighlight="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="30sp"
+            app:met_baseColor="@color/white"
+            app:met_floatingLabel="highlight"
+            app:met_maxCharacters="11"
+            app:met_primaryColor="@color/white"
+            app:met_singleLineEllipsis="true" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColorHighlight="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="30sp"
+            app:met_baseColor="@color/white"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/white"
+            app:met_singleLineEllipsis="true" />
+
+        <com.ornach.nobobutton.NoboButton
+            android:id="@+id/btnSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:outlineAmbientShadowColor="@color/colorAccent"
+            android:textAlignment="center"
+            app:nb_backgroundColor="@color/purple_700"
+            app:nb_enabled="true"
+            app:nb_focusColor="#4254B3"
+            app:nb_radius="10dp"
+            app:nb_text="Sign In"
+            app:nb_textColor="@android:color/white"
+            app:nb_gravity="top"
+            app:nb_textSize="25dp"
+            app:nb_textStyle="bold" />
+
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>
